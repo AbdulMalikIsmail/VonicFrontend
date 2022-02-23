@@ -94,11 +94,11 @@ const Section6 = ({ }) => {
 
               (
                 searchTerm == '' ? allTopics.map((item, ind) => (
-                  <Grid item lg={4} sm={6} xs={12} key={ind}>
+                  <Grid item lg={12} sm={12} xs={12} key={ind}>
                     <ProductCard1 hoverEffect {...item} />
                   </Grid>
                 )) : allTopics.filter((k) => k.title.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) > -1).map((item, ind) => (
-                  <Grid item lg={4} sm={6} xs={12} key={ind}>
+                  <Grid item lg={12} sm={12} xs={12} key={ind}>
                     <ProductCard1 hoverEffect {...item} />
                   </Grid>
                 )
