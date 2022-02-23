@@ -11,7 +11,7 @@ import Divider from "../Divider";
 import Icon from "../icon/Icon";
 import Typography, { H5, Paragraph } from "../Typography";
 import { StyledMiniCart } from "./MiniCartStyle";
-import { useStore } from "store";
+import { useStore } from "../../store";
 
 type MiniCartProps = {
   toggleSidenav?: () => void;
