@@ -11,7 +11,7 @@ import ProductCard1 from "../product-cards/ProductCard1";
 // import StyledProductCategory from "./ProductCategoryStyle";
 import * as HomeAPIS from "api/Home";
 import { useQuery } from 'react-query';
-import { useStore } from "../../store";
+import { useStore } from "../../Store";
 import Accordion from "@component/accordion/Accordion";
 import AccordionHeader from "@component/accordion/AccordionHeader";
 import { SemiSpan } from "@component/Typography";

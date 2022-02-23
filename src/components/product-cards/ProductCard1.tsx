@@ -3,7 +3,7 @@
 // import Image from "next/image";
 // import Link from "next/link";
 import React, { Fragment, useEffect, useState } from "react";
-import { useStore } from "../../store";
+import { useStore } from "../../Store";
 import { CSSProperties } from "styled-components";
 import Box from "../Box";
 import Button from "../buttons/Button";
