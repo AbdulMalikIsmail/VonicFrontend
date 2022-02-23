@@ -1,6 +1,6 @@
 // import productDatabase from "@data/product-database";
 // import NextImage from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Box from "../Box";
 import CategorySectionHeader from "../CategorySectionHeader";
 import Container from "../Container";
@@ -11,12 +11,42 @@ import ProductCard1 from "../product-cards/ProductCard1";
 // import StyledProductCategory from "./ProductCategoryStyle";
 import * as HomeAPIS from "api/Home";
 import { useQuery } from 'react-query';
-import { useStore } from "Store";
+import { useStore } from "store";
+import Accordion from "@component/accordion/Accordion";
+import AccordionHeader from "@component/accordion/AccordionHeader";
+import { SemiSpan } from "@component/Typography";
+
+// const styles = {
+//   card :{
+//     padding: 16
+//   }
+// }
 
 const Section6 = ({ }) => {
   // const [selected, setSelected] = useState("");
 
   const { searchTerm } = useStore();
+  const [topicList, setTopicsList] = useState([])
+
+  const [filteredTopics, setFilteredList] = useState([])
+
+  useEffect(() => {
+    console.log(searchTerm)
+    let filterlist = topicList.map((topics) =>  {
+      let re = new RegExp(searchTerm, 'gi');
+      let filter = topics.subtopics.filter((k) => k.title.match(re))
+      if (filter.length > 0){
+        return {
+          ...topics,
+          subtopics : filter
+        }
+      }
+    }).filter((k) => k)
+    // Filtered the ones which has data in it
+    console.log(topicList, filterlist)
+    setFilteredList(filterlist)
+    
+  },[searchTerm])
 
 
   // const handleCategoryClick = ({ target: { id: brand } }) => {
@@ -37,14 +67,14 @@ const Section6 = ({ }) => {
     refetchOnWindowFocus: false,
   });
 
-  // useEffect(() => {
-  //   console.log(searchTerm)
-  //   if (allTopics && allTopics.length > 0) {
-  //     console.log(allTopics.filter((k) => k.title.indexOf(searchTerm) > -1))
-  //   }
-  // }, [searchTerm])
+  useEffect(() => {
+    console.log(allTopics)
+    if (allTopics && allTopics.data) {
+      setTopicsList(allTopics.data)
+    }
+  }, [allTopics])
 
-  console.log( isTopicsLoading)
+  console.log(allTopics, isTopicsLoading)
 
 
   return (
@@ -90,19 +120,50 @@ const Section6 = ({ }) => {
         <Box flex="1 1 0" minWidth="0px">
           <CategorySectionHeader title="Topics" />
           <Grid container spacing={6}>
-            {allTopics &&
+            {topicList &&
 
               (
-                searchTerm == '' ? allTopics.map((item, ind) => (
-                  <Grid item lg={12} sm={12} xs={12} key={ind}>
-                    <ProductCard1 hoverEffect {...item} />
+                searchTerm == '' ? topicList.map((item, ind) => item.subtopics && (
+                  <Grid item lg={12} sm={12} xs={12} key={ind} spacing={6}>
+                    <Accordion key={item.title} expanded>
+                      <AccordionHeader
+                        px="16px"
+                        py="16px"
+                        color="text.muted"
+                      // justifyContent="flex-start"
+                      >
+                        <SemiSpan className="cursor-pointer" mr="9px">
+                          {item.title}
+                        </SemiSpan>
+                      </AccordionHeader>
+                      {item.subtopics.map((subitem, indInner) => (
+                        <Grid item lg={12} sm={12} xs={12} key={indInner} style={{marginTop:6, marginBottom:6}}>
+                          <ProductCard1 hoverEffect {...subitem} />
+                        </Grid>
+                      ))}
+                    </Accordion>
                   </Grid>
-                )) : allTopics.filter((k) => k.title.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) > -1).map((item, ind) => (
-                  <Grid item lg={12} sm={12} xs={12} key={ind}>
-                    <ProductCard1 hoverEffect {...item} />
+                )) : filteredTopics.map((item, ind) => item.subtopics && (
+                  <Grid item lg={12} sm={12} xs={12} key={ind} spacing={6}>
+                    <Accordion key={item.title} expanded>
+                      <AccordionHeader
+                        px="16px"
+                        py="16px"
+                        color="text.muted"
+                      // justifyContent="flex-start"
+                      >
+                        <SemiSpan className="cursor-pointer" mr="9px">
+                          {item.title}
+                        </SemiSpan>
+                      </AccordionHeader>
+                      {item.subtopics.map((subitem, indInner) => (
+                        <Grid item lg={12} sm={12} xs={12} key={indInner} style={{marginTop:6, marginBottom:6}}>
+                          <ProductCard1 hoverEffect {...subitem} />
+                        </Grid>
+                      ))}
+                    </Accordion>
                   </Grid>
-                )
-                )
+                ))
               )
 
             }

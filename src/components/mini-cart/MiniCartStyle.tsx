@@ -31,7 +31,7 @@ export const StyledMiniCart = styled.div`
     .product-details {
       flex: 1 1 0;
       min-width: 0px;
-
+      margin-left:10px;
       .title {
         margin: 0px;
         white-space: nowrap;

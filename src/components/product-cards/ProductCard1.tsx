@@ -1,9 +1,9 @@
 import ProductIntro from "@component/products/ProductIntro";
 import { useAppContext } from "@context/app/AppContext";
-import { CartItem } from "@reducer/cartReducer";
 // import Image from "next/image";
 import Link from "next/link";
-import React, { Fragment, useCallback, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { useStore } from "store";
 import { CSSProperties } from "styled-components";
 import Box from "../Box";
 import Button from "../buttons/Button";
@@ -22,7 +22,7 @@ export interface ProductCard1Props extends CardProps {
   imgUrl?: string;
   title?: string;
   price?: number;
-  desc?:string;
+  description?: string;
   off?: number;
   rating?: number;
   id?: string | number;
@@ -44,109 +44,75 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
   imgUrl,
   title,
   price,
-  desc,
+  description,
   off,
   rating,
   ...props
 }) => {
   const [open, setOpen] = useState(false);
+  const [cartItem, setCartItem] = useState(null);
 
-  const { state, dispatch } = useAppContext();
-  const cartItem: CartItem = state.cart.cartList.find((item) => item.id === id);
+  const { cartList, updateCart } = useStore();
+
+  useEffect(() => {
+    let item = null
+    if (cartList && cartList.length > 0){
+      item = cartList.find((k) => k.id === id);
+    }
+    setCartItem(item)
+    
+  }, [cartList])
+
+
 
   const toggleDialog = useCallback(() => {
     setOpen((open) => !open);
   }, []);
 
-  const handleCartAmountChange = useCallback(
-    (amount) => () => {
-      dispatch({
-        type: "CHANGE_CART_AMOUNT",
-        payload: {
-          name: title,
-          qty: amount,
-          price,
-          imgUrl,
-          id,
-        },
-      });
-    },
-    []
-  );
+  const handleCartAmountChange = (amount) => {
+    let cartListTmp = [...cartList]
+    if (cartItem) {
+      let index = cartList.findIndex((item) => item.id === id);
+      cartListTmp[index].qty = amount
+    } else {
+      cartListTmp.push({
+        id: id,
+        name: title,
+        qty: amount
+      })
+    }
+    updateCart([...cartListTmp])
+    console.log(cartList, cartListTmp)
+
+  }
 
   return (
     <StyledProductCard1 {...props}>
-      <div className="image-holder">
-        {/* {!!off && (
-          <Chip
-            position="absolute"
-            bg="primary.main"
-            color="primary.text"
-            fontSize="10px"
-            fontWeight="600"
-            p="5px 10px"
-            top="10px"
-            left="10px"
-          >
-            {off}% off
-          </Chip>
-        )} */}
-
-        {/* <FlexBox className="extra-icons">
-          <Icon
-            color="secondary"
-            variant="small"
-            mb="0.5rem"
-            onClick={toggleDialog}
-          >
-            eye-alt
-          </Icon>
-
-          <Icon className="favorite-icon outlined-icon" variant="small">
-            heart
-          </Icon> */}
-          {/* <Icon className="favorite-icon" color="primary" variant="small">
-              heart-filled
-            </Icon> */}
-        {/* </FlexBox> */}
-
-        {/* <Link href={`/product/${id}`}>
-          <a>
-            <Image
-              src={imgUrl}
-              layout="responsive"
-              alt={title}
-              width={100}
-              height={100}
-            />
-          </a>
-        </Link> */}
-      </div>
       <div className="details">
         <FlexBox>
           <Box flex="1 1 0" minWidth="0px" mr="0.5rem">
-            <Link href={`/product/${id}`}>
-              <a>
-                <H3
-                  className="title"
-                  fontSize="14px"
-                  textAlign="left"
-                  fontWeight="600"
-                  color="text.secondary"
-                  mb="10px"
-                  title={title}
-                >
-                  {title}
-                </H3>
-              </a>
-            </Link>
+            {/* <Link href={`/product/${id}`}>
+              <a> */}
+            <H3
+              className="title"
+              fontSize="14px"
+              textAlign="left"
+              fontWeight="600"
+              color="text.secondary"
+              mb="10px"
+              title={title}
+            >
+              {title}
+            </H3>
+            {/* </a>
+            </Link> */}
 
             {/* <Rating value={rating || 0} outof={5} color="warn" readonly /> */}
 
             <FlexBox alignItems="center" mt="10px">
               <SemiSpan pr="0.5rem" fontWeight="600" color="primary.main">
                 {/* ${(price - (price * off) / 100).toFixed(2)} */}
-                {desc}
+                {description}
               </SemiSpan>
               {/* {!!off && (
                 <SemiSpan color="text.muted" fontWeight="600">
@@ -169,7 +135,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
               padding="3px"
               size="none"
               borderColor="primary.light"
-              onClick={handleCartAmountChange((cartItem?.qty || 0) + 1)}
+              onClick={ () => handleCartAmountChange((cartItem?.qty || 0) + 1)}
             >
               <Icon variant="small">plus</Icon>
             </Button>
@@ -185,7 +151,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
                   padding="3px"
                   size="none"
                   borderColor="primary.light"
-                  onClick={handleCartAmountChange(cartItem?.qty - 1)}
+                  onClick={() => handleCartAmountChange(cartItem?.qty - 1)}
                 >
                   <Icon variant="small">minus</Icon>
                 </Button>
@@ -195,7 +161,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
         </FlexBox>
       </div>
 
-      <Modal open={open} onClose={toggleDialog}>
+      {/* <Modal open={open} onClose={toggleDialog}>
         <Card p="1rem" position="relative">
           <ProductIntro imgUrl={[imgUrl]} title={title} price={price} id={id} />
           <Box
@@ -214,7 +180,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
             </Icon>
           </Box>
         </Card>
-      </Modal>
+      </Modal> */}
     </StyledProductCard1>
   );
 };
@@ -226,7 +192,7 @@ ProductCard1.defaultProps = {
   off: 50,
   price: 450,
   rating: 0,
-  desc:''
+  description: ''
 };
 
 export default ProductCard1;

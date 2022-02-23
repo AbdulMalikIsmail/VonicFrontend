@@ -15,7 +15,7 @@ import Sidenav from "../sidenav/Sidenav";
 import { Tiny } from "../Typography";
 import StyledHeader from "./HeaderStyle";
 import UserLoginDialog from "./UserLoginDialog";
-import { useStore } from "Store";
+import { useStore } from "store";
 
 type HeaderProps = {
   isFixed?: boolean;

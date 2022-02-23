@@ -76,8 +76,8 @@
    * @return {object}           The response data
    */
   
-  var path = 'https://rickandmortyapi.com/api'
-  var path = ''
+  // var path = 'https://rickandmortyapi.com/api'
+  var path = 'http://172.105.125.128:5542'
   var TIMEOUT_IN_MILLISECONDS = 120000
   export default function request(url, options) {
     // return fetch(path + url, options)

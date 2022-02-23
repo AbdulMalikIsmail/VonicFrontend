@@ -31,7 +31,7 @@ const Accordion: React.FC<AccordionProps> = ({
     let parent = ref.current;
 
     if (parent) {
-      setHeaderHeight(parent.children[0].scrollHeight);
+      setHeaderHeight(parent.children[0].scrollHeight );
       setParentHeight(parent.scrollHeight);
     }
   }, [ref.current]);
