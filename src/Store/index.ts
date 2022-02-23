@@ -1,13 +1,21 @@
 import create from "zustand";
 
-interface TodoState {
-    searchTerm: string;
-    updateSearchTerm: (text: string) => void;
-    cartList: [];
-    updateCart: (items: []) => void;
+interface CardItems {
+  id: string | number;
+  name: string;
+  qty: number;
 }
 
-export const useStore = create<TodoState>((set) => ({
+interface ZustandState {
+    searchTerm: string;
+    updateSearchTerm: (text: string) => void;
+    cartList: CardItems[];
+    updateCart: (items: CardItems[]) => void;
+}
+
+
+
+export const useStore = create<ZustandState>((set) => ({
   // initial state
   searchTerm: '',
   // methods for manipulating state

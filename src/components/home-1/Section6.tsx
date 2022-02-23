@@ -16,12 +16,6 @@ import Accordion from "@component/accordion/Accordion";
 import AccordionHeader from "@component/accordion/AccordionHeader";
 import { SemiSpan } from "@component/Typography";
 
-// const styles = {
-//   card :{
-//     padding: 16
-//   }
-// }
-
 const Section6 = ({ }) => {
   // const [selected, setSelected] = useState("");
 
@@ -68,9 +62,9 @@ const Section6 = ({ }) => {
   });
 
   useEffect(() => {
-    console.log(allTopics)
-    if (allTopics && allTopics.data) {
-      setTopicsList(allTopics.data)
+    // console.log(allTopics)
+    if (allTopics && allTopics['data']) {
+      setTopicsList(allTopics['data'])
     }
   }, [allTopics])
 

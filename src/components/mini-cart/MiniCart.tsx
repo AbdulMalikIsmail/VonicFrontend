@@ -1,21 +1,27 @@
-import { useEffect } from "react";
-import Avatar from "@component/avatar/Avatar";
+// import { useEffect } from "react";
+// import Avatar from "@component/avatar/Avatar";
 import FlexBox from "@component/FlexBox";
-import { useAppContext } from "@context/app/AppContext";
-import { CartItem } from "@reducer/cartReducer";
+// import { useAppContext } from "@context/app/AppContext";
+// import { CartItem } from "@reducer/cartReducer";
 import NextImage from "next/image";
 import Link from "next/link";
-import React, { Fragment, useCallback } from "react";
+import React, { Fragment } from "react";
 import Button from "../buttons/Button";
 import Divider from "../Divider";
 import Icon from "../icon/Icon";
-import Typography, { H5, Paragraph, Tiny } from "../Typography";
+import Typography, { H5, Paragraph } from "../Typography";
 import { StyledMiniCart } from "./MiniCartStyle";
 import { useStore } from "store";
 
 type MiniCartProps = {
   toggleSidenav?: () => void;
 };
+
+interface CardItems {
+  id: number;
+  name: string;
+  qty: number;
+}
 
 const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
   // const { state, dispatch } = useAppContext();
@@ -37,10 +43,10 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
   // );
 
   const handleCartAmountChange = (amount, product) => {
-    let cartListTmp = [...cartList]
+    let cartListTmp: CardItems[] = [...cartList] as any
     let index = cartList.findIndex((item) => item.id === product.id);
     if (amount > 0){
-      cartListTmp[index].qty = amount
+      cartListTmp[index]['qty'] = amount
     }else{
       cartListTmp.splice(index,1)
     }
@@ -82,7 +88,7 @@ const MiniCart: React.FC<MiniCartProps> = ({ toggleSidenav }) => {
             </Paragraph>
           </FlexBox>
         )}
-        {cartList.map((item: CartItem) => (
+        {cartList.map((item) => (
           <Fragment key={item.id}>
             <div className="cart-item">
               <FlexBox alignItems="center" flexDirection="column">

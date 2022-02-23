@@ -1,20 +1,26 @@
-import ProductIntro from "@component/products/ProductIntro";
-import { useAppContext } from "@context/app/AppContext";
+// import ProductIntro from "@component/products/ProductIntro";
+// import { useAppContext } from "@context/app/AppContext";
 // import Image from "next/image";
-import Link from "next/link";
-import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
+// import Link from "next/link";
+import React, { Fragment, useEffect, useState } from "react";
 import { useStore } from "store";
 import { CSSProperties } from "styled-components";
 import Box from "../Box";
 import Button from "../buttons/Button";
-import Card, { CardProps } from "../Card";
+import { CardProps } from "../Card";
 // import { Chip } from "../Chip";
 import FlexBox from "../FlexBox";
 import Icon from "../icon/Icon";
-import Modal from "../modal/Modal";
+// import Modal from "../modal/Modal";
 // import Rating from "../rating/Rating";
 import { H3, SemiSpan } from "../Typography";
 import { StyledProductCard1 } from "./ProductCardStyle";
+
+interface CardItems2 {
+  id:  string | number;
+  name: string;
+  qty: number;
+}
 
 export interface ProductCard1Props extends CardProps {
   className?: string;
@@ -49,7 +55,6 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
   rating,
   ...props
 }) => {
-  const [open, setOpen] = useState(false);
   const [cartItem, setCartItem] = useState(null);
 
   const { cartList, updateCart } = useStore();
@@ -57,7 +62,7 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
   useEffect(() => {
     let item = null
     if (cartList && cartList.length > 0){
-      item = cartList.find((k) => k.id === id);
+      item = cartList.find((k:{id:any}) => k.id === id);
     }
     setCartItem(item)
     
@@ -65,15 +70,11 @@ const ProductCard1: React.FC<ProductCard1Props> = ({
 
 
 
-  const toggleDialog = useCallback(() => {
-    setOpen((open) => !open);
-  }, []);
-
   const handleCartAmountChange = (amount) => {
-    let cartListTmp = [...cartList]
+    let cartListTmp : CardItems2[] = [...cartList]
     if (cartItem) {
-      let index = cartList.findIndex((item) => item.id === id);
-      cartListTmp[index].qty = amount
+      let index = cartList.findIndex((item:{id:any}) => item.id === id);
+      cartListTmp[index]['qty'] = amount
     } else {
       cartListTmp.push({
         id: id,
